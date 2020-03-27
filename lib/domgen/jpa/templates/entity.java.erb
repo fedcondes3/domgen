@@ -278,14 +278,14 @@ public <%= entity.abstract? ? 'abstract ' : '' %>class <%= entity.jpa.name %>
             op = '.equals'
             op_prefix = '!'
           elsif '>' == op
-            op = '.after'
+            op = '.isAfter'
           elsif '<=' == op
-            op = '.after'
+            op = '.isAfter'
             op_prefix = '!'
           elsif '<' == op
-            op = '.before'
+            op = '.isBefore'
           elsif '>=' == op
-            op = '.before'
+            op = '.isBefore'
             op_prefix = '!'
           end
         end

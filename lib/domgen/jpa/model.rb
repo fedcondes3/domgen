@@ -503,6 +503,10 @@ module Domgen
         end
       end
 
+      def converters
+        @converters ||= []
+      end
+
       # Should domgen generate template xmls for model?
       def template_xmls?
         repository.application.model_library? && !repository.application.standalone_model_library?
@@ -736,6 +740,18 @@ FRAGMENT
 
       def standalone_persistence_unit_map
         @standalone_persistence_units ||= {}
+      end
+
+      attr_writer :use_java_time
+
+      def use_java_time
+        @use_java_time.nil? ? false : !!@use_java_time
+      end
+
+      attr_writer :db_time_zone
+
+      def db_time_zone
+        @db_time_zone.nil? ? "GMT" : @db_time_zone
       end
     end
 

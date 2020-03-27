@@ -53,6 +53,13 @@ public class <%= dao.jpa.dao_name %>
 <%  end
    else -%>
 <%  query.parameters.each_with_index do |p, index|
+    param_prefix = nil
+    if p.date?
+      param_prefix = "java.sql.Date.from( "
+    elsif p.datetime?
+      param_prefix = "java.sql.Timestamp.valueOf( "
+    end
+
     param_suffix = nil
     if p.reference?
       param_suffix = ".#{getter_for(p.referenced_entity.primary_key)}"
@@ -60,8 +67,12 @@ public class <%= dao.jpa.dao_name %>
       param_suffix = '.name()'
     elsif p.enumeration? && p.enumeration.numeric_values?
       param_suffix = '.ordinal()'
+    elsif p.date?
+      param_suffix = ".atZone( ZoneId.systemDefault() ).toInstant() )"
+    elsif p.datetime?
+      param_suffix = ".toLocalDateTime() )"
     end
-    param_value = "#{Reality::Naming.camelize(p.name)}#{param_suffix}"
+    param_value = "#{param_prefix}#{Reality::Naming.camelize(p.name)}#{param_suffix}"
     if param_suffix && p.nullable?
       param_value = "null == #{Reality::Naming.camelize(p.name)} ? null : #{param_value}"
     end
